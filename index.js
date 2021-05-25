@@ -2,7 +2,7 @@ const fetch = require('node-fetch')
 const cheerio = require('cheerio')
 const express = require('express')
 const app = express()
-const port = 3000
+const port = 1337
 
 app.get('/', (req, res) => {
     fetch('https://news.sanook.com/lotto/check/'+req.query.date+'/')
