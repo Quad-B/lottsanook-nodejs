@@ -5,7 +5,7 @@
 DEST="./public"
 html=".html"
 
-mkdir -p "$DEST/"
+#mkdir -p "$DEST/"
 
 # Execute all php files and save them as html
 for f in *.php; 
