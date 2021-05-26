@@ -1,6 +1,8 @@
 const fetch = require('node-fetch')
 const cheerio = require('cheerio')
 const express = require('express')
+var fsPromises = require('fs')
+const fs = fsPromises.promises;
 
 const app = express()
 const port = process.env.PORT || 3000;
@@ -214,13 +216,41 @@ app.get('/god', async (req, res) => {
     let yearlist = [];
     let nextyear = new Date().getFullYear()+543;
     let channel = [];
+    let jdata
+    let countloveme = 0
+    if (fsPromises.existsSync('tmp/cache.txt')) {
+        await fs.readFile('tmp/cache.txt', function(err, data) {
+            if(!err || data == ""){
+                jdata = JSON.parse(data)
+                if(jdata[jdata.length-1].substring(4,8) == (new Date().getFullYear()+543)){
+                    year = new Date().getFullYear()+542
+                    //console.log('yes this year')
+                    //console.log(year)
+                }
+                jdata.forEach(function (value, i) {
+                    if(value.substring(4,8) == (new Date().getFullYear()+543)){
+                        //delete jdata[i];
+                        countloveme--
+                        //console.log('remove json this year')
+                    }
+                });
+                jdata.splice(countloveme)
+            }
+        });
+    }
     while(year <= nextyear){
+        //console.log(year)
+        //console.log(nextyear)
+        //console.log('insidewhile')
         channel = []
         for (let i=0; i < 10; i++) {
             preyearsuperlist = [];
             preyearlist = [];
             let peryear = [];
             let ayear = year+i
+            //console.log(ayear)
+            //console.log(year)
+            //console.log('insidefor')
             await fetch('https://www.myhora.com/%E0%B8%AB%E0%B8%A7%E0%B8%A2/%E0%B8%9B%E0%B8%B5-'+ayear+'.aspx')
             .then(res => res.text())
             .then((body) => {
@@ -229,6 +259,7 @@ app.get('/god', async (req, res) => {
                 for (const val of $('font').toArray()){
                     if(val.firstChild.data.indexOf('ตรวจสลากกินแบ่งรัฐบาล') > -1){
                         let day = val.firstChild.data.split(" ").splice(2)
+                        //console.log(day)
                         let monthnum
                         switch (day[2]){
                             case 'มกราคม' : monthnum="01"; break;
@@ -249,14 +280,33 @@ app.get('/god', async (req, res) => {
                     }
                 }
                 for (const val of peryear){
+                    //console.log('insideforval')
+                    //console.log(val)
                     yearlist.push(val)
+                    if(jdata){
+                        jdata.push(val)
+                    }
                 }
             })
         }
-        console.log(year)
+        //console.log(year)
+        //console.log(yearlist)
+        //console.log(jdata)
         year += 10
     }
-    res.send(yearlist)
+    if(jdata){
+        fsPromises.writeFile('tmp/cache.txt', JSON.stringify(jdata), function (err) {
+            if (err) throw err;
+            console.log('Saved!');
+            res.send(jdata)
+        });
+    }else{
+        fsPromises.writeFile('tmp/cache.txt', JSON.stringify(yearlist), function (err) {
+            if (err) throw err;
+            console.log('Saved!');
+            res.send(yearlist)
+        });
+    }
 })
 
 app.get('/gdpy', (req, res) => {
