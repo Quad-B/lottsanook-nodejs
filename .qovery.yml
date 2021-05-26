@@ -3,6 +3,7 @@ application:
   name: "lottsanook"
   project: "lottsanook"
   organization: "QoveryCommunity"
+  port: 8080
 routers:
 - name: "main-lottsanook"
   routes:
