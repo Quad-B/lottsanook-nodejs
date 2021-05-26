@@ -10,4 +10,4 @@ routers:
   routes:
   - application_name: "lottsanook"
     paths:
-    - "/"
+    - "/*"
