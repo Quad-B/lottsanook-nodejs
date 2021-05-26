@@ -3,7 +3,7 @@ const cheerio = require('cheerio')
 const express = require('express')
 
 const app = express()
-const port = 9090
+const port = 80
 
 function padLeadingZeros(num, size) {
     var s = num+"";
