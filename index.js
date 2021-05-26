@@ -281,7 +281,7 @@ app.get('/god', async (req, res) => {
                 }
                 for (const val of peryear){
                     //console.log('insideforval')
-                    //console.log(val)
+                    console.log(val)
                     yearlist.push(val)
                     if(jdata){
                         jdata.push(val)
