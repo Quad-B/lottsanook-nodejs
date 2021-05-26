@@ -4,7 +4,7 @@ application:
   project: "lottsanook"
   organization: "QoveryCommunity"
   publicly_accessible: true
-  port: 80
+  port: 3000
 routers:
 - name: "main-lottsanook"
   routes:
