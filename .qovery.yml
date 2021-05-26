@@ -1,0 +1,11 @@
+---
+application:
+  name: "lottsanook"
+  project: "lottsanook"
+  organization: "QoveryCommunity"
+routers:
+- name: "main-lottsanook"
+  routes:
+  - application_name: "lottsanook"
+    paths:
+    - "/*"
