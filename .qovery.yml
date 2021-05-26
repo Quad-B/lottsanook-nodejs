@@ -4,10 +4,9 @@ application:
   project: "lottsanook"
   organization: "QoveryCommunity"
   publicly_accessible: true
-  port: 8080
 routers:
 - name: "main-lottsanook"
   routes:
   - application_name: "lottsanook"
     paths:
-    - "/*"
+    - "/"
