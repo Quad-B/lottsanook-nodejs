@@ -4,7 +4,6 @@ module.exports = {
     script: 'index.js',
     error_file : "./err.log",
     out_file : "./out.log",
-    watch : '.',
     ignore_watch: ["node_modules","tmp/cache.txt","err.log",".env","Procfile","out.log"]
   }],
 
