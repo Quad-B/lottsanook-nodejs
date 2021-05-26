@@ -265,7 +265,11 @@ app.get('/god', async (req, res) => {
             let peryear = [];
             let ayear = year+i
             if(ayear > nextyear){
-                break;
+                if(jdata){
+                    res.send(jdata)
+                }else{
+                    res.send(yearlist)
+                }
             }
             console.log(ayear)
             //console.log(year)
@@ -318,13 +322,13 @@ app.get('/god', async (req, res) => {
         fs.writeFile('tmp/cache.txt', JSON.stringify(jdata), function (err) {
             if (err) throw err;
             console.log('Saved!');
-            res.send(jdata)
+            //res.send(jdata)
         });
     }else{
         fs.writeFile('tmp/cache.txt', JSON.stringify(yearlist), function (err) {
             if (err) throw err;
             console.log('Saved!');
-            res.send(yearlist)
+            //res.send(yearlist)
         });
     }
 })
