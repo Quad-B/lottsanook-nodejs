@@ -1,9 +1,15 @@
 const fetch = require('node-fetch')
 const cheerio = require('cheerio')
 const express = require('express')
-var fsPromises = require('fs')
-const fs = fsPromises.promises;
+var fs = require('fs')
+const util = require('util');
 
+const readFile = util.promisify(fs.readFile);
+
+function getStuff(damnpath) {
+    return readFile(damnpath);
+}
+  
 const app = express()
 const port = process.env.PORT || 3000;
 
@@ -218,25 +224,35 @@ app.get('/god', async (req, res) => {
     let channel = [];
     let jdata
     let countloveme = 0
-    if (fsPromises.existsSync('tmp/cache.txt')) {
-        await fs.readFile('tmp/cache.txt', function(err, data) {
-            if(!err || data == ""){
-                jdata = JSON.parse(data)
-                if(jdata[jdata.length-1].substring(4,8) == (new Date().getFullYear()+543)){
-                    year = new Date().getFullYear()+542
-                    //console.log('yes this year')
-                    //console.log(year)
-                }
-                jdata.forEach(function (value, i) {
-                    if(value.substring(4,8) == (new Date().getFullYear()+543)){
-                        //delete jdata[i];
-                        countloveme--
-                        //console.log('remove json this year')
-                    }
-                });
-                jdata.splice(countloveme)
+    var fileContents = null;
+    try {
+        fileContents = fs.readFileSync('tmp/cache.txt');
+    } catch (err) {
+        // Here you get the error when the file was not found,
+        // but you also get any other error
+    }
+    //console.log(fileContents)
+    if (fileContents) {
+        jdata = JSON.parse(fileContents);
+        if (
+            jdata[jdata.length - 1].substring(4, 8) ==
+            new Date().getFullYear() + 543
+        ) {
+            year = new Date().getFullYear() + 543;
+            //console.log("yes this year");
+            //console.log(year)
+        }
+        jdata.forEach(function (value, i) {
+            if (
+                value.substring(4, 8) ==
+                new Date().getFullYear() + 543
+            ) {
+                //delete jdata[i];
+                countloveme--;
+                //console.log('remove json this year')
             }
         });
+        jdata.splice(countloveme);
     }
     while(year <= nextyear){
         //console.log(year)
@@ -248,7 +264,10 @@ app.get('/god', async (req, res) => {
             preyearlist = [];
             let peryear = [];
             let ayear = year+i
-            //console.log(ayear)
+            if(ayear > nextyear){
+                break;
+            }
+            console.log(ayear)
             //console.log(year)
             //console.log('insidefor')
             await fetch('https://www.myhora.com/%E0%B8%AB%E0%B8%A7%E0%B8%A2/%E0%B8%9B%E0%B8%B5-'+ayear+'.aspx')
@@ -281,13 +300,14 @@ app.get('/god', async (req, res) => {
                 }
                 for (const val of peryear){
                     //console.log('insideforval')
-                    console.log(val)
+                    //console.log(val)
                     yearlist.push(val)
                     if(jdata){
                         jdata.push(val)
                     }
                 }
             })
+            //if()
         }
         //console.log(year)
         //console.log(yearlist)
@@ -295,13 +315,13 @@ app.get('/god', async (req, res) => {
         year += 10
     }
     if(jdata){
-        fsPromises.writeFile('tmp/cache.txt', JSON.stringify(jdata), function (err) {
+        fs.writeFile('tmp/cache.txt', JSON.stringify(jdata), function (err) {
             if (err) throw err;
             console.log('Saved!');
             res.send(jdata)
         });
     }else{
-        fsPromises.writeFile('tmp/cache.txt', JSON.stringify(yearlist), function (err) {
+        fs.writeFile('tmp/cache.txt', JSON.stringify(yearlist), function (err) {
             if (err) throw err;
             console.log('Saved!');
             res.send(yearlist)
