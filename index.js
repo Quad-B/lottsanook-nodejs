@@ -392,16 +392,13 @@ app.get('/gdpy', (req, res) => {
     let peryear = []
     let yearlist = []
     var fileContents = null;
+    var fileDelete = null;
     try {
         if(req.query.year == new Date().getFullYear() + 543){
-            fileDelete = fs.unlinkSync('tmp/'+req.query.date+'.txt');
+            fileDelete = fs.unlinkSync('tmp/'+req.query.year+'.txt');
             console.log('yes this year')
         }
-    } catch (err) {
-
-    }
-    try {
-        fileContents = fs.readFileSync('tmp/'+req.query.date+'.txt');
+        fileContents = fs.readFileSync('tmp/'+req.query.year+'.txt');
     } catch (err) {
 
     }
