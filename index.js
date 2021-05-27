@@ -119,7 +119,7 @@ app.get('/', (req, res) => {
             }
             fs.writeFile('tmp/'+req.query.date+'.txt', JSON.stringify(data), function (err) {
                 if (err) throw err;
-                console.log('Saved!');
+                //console.log('Saved!');
                 res.send(data)
             });
         })
@@ -240,7 +240,7 @@ app.get('/index2', (req, res) => {
             //res.send('test')
             fs.writeFile('tmp/'+req.query.date+'.txt', JSON.stringify(data), function (err) {
                 if (err) throw err;
-                console.log('Saved!');
+                //console.log('Saved!');
                 res.send(data)
             });
         });
@@ -312,7 +312,7 @@ app.get('/god', async (req, res) => {
             if(ayear > nextyear){
                 break
             }
-            console.log(ayear)
+            //console.log(ayear)
             //console.log(year)
             //console.log('insidefor')
             await fetch('https://www.myhora.com/%E0%B8%AB%E0%B8%A7%E0%B8%A2/%E0%B8%9B%E0%B8%B5-'+ayear+'.aspx')
@@ -363,7 +363,7 @@ app.get('/god', async (req, res) => {
                     }
                     fs.writeFile('tmp/'+day[3]+'.txt', JSON.stringify(preyearlist), function (err) {
                         if (err) throw err;
-                        console.log('Saved!');
+                        //console.log('Saved!');
                     });
                 }
             })
@@ -376,13 +376,13 @@ app.get('/god', async (req, res) => {
     if(jdata){
         fs.writeFile('tmp/cache.txt', JSON.stringify(jdata), function (err) {
             if (err) throw err;
-            console.log('Saved!');
+            //console.log('Saved!');
             res.send(jdata)
         });
     }else{
         fs.writeFile('tmp/cache.txt', JSON.stringify(yearlist), function (err) {
             if (err) throw err;
-            console.log('Saved!');
+            //console.log('Saved!');
             res.send(yearlist)
         });
     }
@@ -435,7 +435,7 @@ app.get('/gdpy', (req, res) => {
             }
             fs.writeFile('tmp/'+req.query.year+'.txt', JSON.stringify(yearlist), function (err) {
                 if (err) throw err;
-                console.log('Saved!');
+                //console.log('Saved!');
                 res.send(yearlist)
             });
         })
@@ -554,7 +554,7 @@ app.get('/finddol', async (req, res) => {
         channels = body.splice(408)
     })
     for (const val of channels) {
-        console.log(val)
+        //console.log(val)
         await fetch('http://localhost:'+port+'/?date='+val+'&from')
         .then(res => res.json())
         .then((body) => {
