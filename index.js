@@ -568,8 +568,3 @@ app.get('/finddol', async (req, res) => {
 app.listen(port, '0.0.0.0', () => {
     console.log('Example app listening at http://localhost:'+port)
 })
-
-/*$('h2.title').text('Hello there!');
-$('h2').addClass('welcome');
-
-$.html();*/
