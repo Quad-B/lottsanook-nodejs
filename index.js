@@ -2,13 +2,6 @@ const fetch = require('node-fetch')
 const cheerio = require('cheerio')
 const express = require('express')
 var fs = require('fs')
-const util = require('util');
-
-const readFile = util.promisify(fs.readFile);
-
-function getStuff(damnpath) {
-    return readFile(damnpath);
-}
   
 const app = express()
 const port = process.env.PORT || 3000;
@@ -266,7 +259,7 @@ app.get('/god', async (req, res) => {
     let yearlist = [];
     let nextyear = new Date().getFullYear()+543;
     let channel = [];
-    let jdata
+    //let jdata
     let countloveme = 0
     var fileContents = null;
     try {
@@ -277,18 +270,18 @@ app.get('/god', async (req, res) => {
     }
     //console.log(fileContents)
     if (fileContents) {
-        jdata = JSON.parse(fileContents);
+        yearlist = JSON.parse(fileContents);
         if (
-            jdata[jdata.length - 1].substring(4, 8) ==
+            yearlist[yearlist.length - 1].substring(4, 8) ==
             new Date().getFullYear() + 543
         ) {
             year = new Date().getFullYear() + 543;
             //console.log("yes this year");
             //console.log(year)
         }else{
-            year = jdata[jdata.length - 1].substring(4, 8);
+            year = yearlist[yearlist.length - 1].substring(4, 8);
         }
-        jdata.forEach(function (value, i) {
+        yearlist.forEach(function (value, i) {
             if (
                 value.substring(4, 8) ==
                 year
@@ -298,7 +291,7 @@ app.get('/god', async (req, res) => {
                 //console.log('remove json this year')
             }
         });
-        jdata.splice(countloveme);
+        yearlist.splice(countloveme);
     }
     let day
     while(year <= nextyear){
@@ -349,9 +342,9 @@ app.get('/god', async (req, res) => {
                     //console.log('insideforval')
                     //console.log(val)
                     yearlist.push(val)
-                    if(jdata){
+                    /*if(jdata){
                         jdata.push(val)
-                    }
+                    }*/
                 }
                 for(const val of preyearsuperlist){
                     preyearlist.push(val)
@@ -375,19 +368,19 @@ app.get('/god', async (req, res) => {
         //console.log(jdata)
         year += 10
     }
-    if(jdata){
+    /*if(jdata){
         fs.writeFile('tmp/cache.txt', JSON.stringify(jdata), function (err) {
             if (err) throw err;
             //console.log('Saved!');
             res.send(jdata)
         });
-    }else{
+    }else{*/
         fs.writeFile('tmp/cache.txt', JSON.stringify(yearlist), function (err) {
             if (err) throw err;
             //console.log('Saved!');
             res.send(yearlist)
         });
-    }
+    //}
 })
 
 app.get('/gdpy', (req, res) => {
