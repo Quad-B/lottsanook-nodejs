@@ -285,11 +285,13 @@ app.get('/god', async (req, res) => {
             year = new Date().getFullYear() + 543;
             //console.log("yes this year");
             //console.log(year)
+        }else{
+            year = jdata[jdata.length - 1].substring(4, 8);
         }
         jdata.forEach(function (value, i) {
             if (
                 value.substring(4, 8) ==
-                new Date().getFullYear() + 543
+                year
             ) {
                 //delete jdata[i];
                 countloveme--;
