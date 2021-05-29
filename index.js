@@ -29,7 +29,26 @@ app.get('/', (req, res) => {
 
     }
     if(fileContents){
-        res.send(JSON.parse(fileContents));
+        data = JSON.parse(fileContents)
+        if(req.query.from !== undefined){
+            switch (req.query.date.substr(2, 2)){
+                case '01' : monthtext="มกราคม"; break;
+                case '02' : monthtext="กุมภาพันธ์"; break;
+                case '03' : monthtext="มีนาคม"; break;
+                case '04' : monthtext="เมษายน"; break;
+                case '05' : monthtext="พฤษภาคม"; break;
+                case '06' : monthtext="มิถุนายน"; break;
+                case '07' : monthtext="กรกฎาคม"; break;
+                case '08' : monthtext="สิงหาคม"; break;
+                case '09' : monthtext="กันยายน"; break;
+                case '10' : monthtext="ตุลาคม"; break;
+                case '11' : monthtext="พฤศจิกายน"; break;
+                case '12' : monthtext="ธันวาคม"; break;
+            }
+
+            data[0][0] = req.query.date.substring(0, 2)+monthtext+req.query.date.substring(4, 8)
+        }
+        res.send(data);
     }else{
         fetch('https://news.sanook.com/lotto/check/'+req.query.date+'/',{redirect: 'error'})
         .then(res => res.text())
@@ -38,25 +57,6 @@ app.get('/', (req, res) => {
             let $ = cheerio.load(body)
         
             //console.log($('strong').toArray())
-
-            if(req.query.from !== undefined){
-                switch (req.query.date.substr(2, 2)){
-                    case '01' : monthtext="มกราคม"; break;
-                    case '02' : monthtext="กุมภาพันธ์"; break;
-                    case '03' : monthtext="มีนาคม"; break;
-                    case '04' : monthtext="เมษายน"; break;
-                    case '05' : monthtext="พฤษภาคม"; break;
-                    case '06' : monthtext="มิถุนายน"; break;
-                    case '07' : monthtext="กรกฎาคม"; break;
-                    case '08' : monthtext="สิงหาคม"; break;
-                    case '09' : monthtext="กันยายน"; break;
-                    case '10' : monthtext="ตุลาคม"; break;
-                    case '11' : monthtext="พฤศจิกายน"; break;
-                    case '12' : monthtext="ธันวาคม"; break;
-                }
-
-                data[0][0] = req.query.date.substring(0, 2)+monthtext+req.query.date.substring(4, 8)
-            }
 
             data[0][1] = $('strong').toArray()[0].firstChild.data
             data[1][1] = $('strong').toArray()[1].firstChild.data
@@ -113,6 +113,24 @@ app.get('/', (req, res) => {
             fs.writeFile('tmp/'+req.query.date+'.txt', JSON.stringify(data), function (err) {
                 if (err) throw err;
                 //console.log('Saved!');
+                if(req.query.from !== undefined){
+                    switch (req.query.date.substr(2, 2)){
+                        case '01' : monthtext="มกราคม"; break;
+                        case '02' : monthtext="กุมภาพันธ์"; break;
+                        case '03' : monthtext="มีนาคม"; break;
+                        case '04' : monthtext="เมษายน"; break;
+                        case '05' : monthtext="พฤษภาคม"; break;
+                        case '06' : monthtext="มิถุนายน"; break;
+                        case '07' : monthtext="กรกฎาคม"; break;
+                        case '08' : monthtext="สิงหาคม"; break;
+                        case '09' : monthtext="กันยายน"; break;
+                        case '10' : monthtext="ตุลาคม"; break;
+                        case '11' : monthtext="พฤศจิกายน"; break;
+                        case '12' : monthtext="ธันวาคม"; break;
+                    }
+    
+                    data[0][0] = req.query.date.substring(0, 2)+monthtext+req.query.date.substring(4, 8)
+                }
                 res.send(data)
             });
         })
