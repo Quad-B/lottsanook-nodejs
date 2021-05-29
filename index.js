@@ -171,7 +171,7 @@ app.get('/index2', (req, res) => {
         .then((body) => {
             res.send(body)
         })
-    }
+    }else{
     let data = ""
     let monthtext
     switch (req.query.date.substring(2, 4))
@@ -291,6 +291,7 @@ app.get('/index2', (req, res) => {
             }
         });
     }
+}
 })
 
 app.get('/reto', (req, res) => {
