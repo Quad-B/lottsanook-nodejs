@@ -327,6 +327,9 @@ app.get('/', (req, res) => {
 })
 
 app.get('/index2', (req, res) => {
+    if (!req.query.date) {
+        req.query.date = padLeadingZeros(new Date().getDate(), 2) + '' + padLeadingZeros((new Date().getMonth() + 1), 2) + '' + (new Date().getFullYear() + 543)
+    }
     var fileDelete = null;
     try {
         if (req.query.fresh !== undefined) {
