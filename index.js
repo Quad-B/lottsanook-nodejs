@@ -619,7 +619,55 @@ app.get('/god', async (req, res) => {
     fs.writeFile('tmp/cache.txt', JSON.stringify(yearlist), function (err) {
         if (err) throw err;
         //console.log('Saved!');
-        res.send(yearlist)
+        //res.send(yearlist)
+        if(req.query.format == "thtext"){
+            yearlist.forEach(element => {
+                let monthtext
+                switch (element.slice(2, 4)) {
+                    case '01': monthtext = "มกราคม"; break;
+                    case '02': monthtext = "กุมภาพันธ์"; break;
+                    case '03': monthtext = "มีนาคม"; break;
+                    case '04': monthtext = "เมษายน"; break;
+                    case '05': monthtext = "พฤษภาคม"; break;
+                    case '06': monthtext = "มิถุนายน"; break;
+                    case '07': monthtext = "กรกฎาคม"; break;
+                    case '08': monthtext = "สิงหาคม"; break;
+                    case '09': monthtext = "กันยายน"; break;
+                    case '10': monthtext = "ตุลาคม"; break;
+                    case '11': monthtext = "พฤศจิกายน"; break;
+                    case '12': monthtext = "ธันวาคม"; break;
+                }
+                //element = element.slice(0, 2) + " " + monthtext + " " + element.slice(4, 8)
+                //yearlist.indexOf(element)
+                yearlist[yearlist.indexOf(element)] = element.slice(0, 2) + " " + monthtext + " " + element.slice(4, 8)
+            });
+            res.send(yearlist)
+        }else if(req.query.format == "combothtext"){
+            yearlist.forEach(element => {
+                let monthtext
+                let array
+                switch (element.slice(2, 4)) {
+                    case '01': monthtext = "มกราคม"; break;
+                    case '02': monthtext = "กุมภาพันธ์"; break;
+                    case '03': monthtext = "มีนาคม"; break;
+                    case '04': monthtext = "เมษายน"; break;
+                    case '05': monthtext = "พฤษภาคม"; break;
+                    case '06': monthtext = "มิถุนายน"; break;
+                    case '07': monthtext = "กรกฎาคม"; break;
+                    case '08': monthtext = "สิงหาคม"; break;
+                    case '09': monthtext = "กันยายน"; break;
+                    case '10': monthtext = "ตุลาคม"; break;
+                    case '11': monthtext = "พฤศจิกายน"; break;
+                    case '12': monthtext = "ธันวาคม"; break;
+                }
+                //element = element.slice(0, 2) + " " + monthtext + " " + element.slice(4, 8)
+                //yearlist.indexOf(element)
+                yearlist[yearlist.indexOf(element)] = [element,element.slice(0, 2) + " " + monthtext + " " + element.slice(4, 8)]
+            });
+            res.send(yearlist)
+        }else{
+            res.send(yearlist)
+        }
     });
     //}
 })
