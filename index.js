@@ -15,6 +15,7 @@ function padLeadingZeros(num, size) {
 app.get('/', (req, res) => {
     var raw
     if (!req.query.date) {
+        req.query.date = padLeadingZeros(new Date().getDate(), 2) + '' + padLeadingZeros((new Date().getMonth() + 1), 2) + '' + (new Date().getFullYear() + 543)
         raw = JSON.stringify({
             date: padLeadingZeros(new Date().getDate(), 2),
             month: padLeadingZeros((new Date().getMonth() + 1), 2),
