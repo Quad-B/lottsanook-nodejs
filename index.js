@@ -130,7 +130,7 @@ app.get('/index2', (req, res) => {
         req.query.date = padLeadingZeros(new Date().getDate(), 2) + '' + padLeadingZeros((new Date().getMonth() + 1), 2) + '' + (new Date().getFullYear() + 543)
     }
     if (req.query.date.substring(4, 8) == new Date().getFullYear() + 543) {
-        fetch('http://localhost:' + port + '/index2?date=' + req.query.date)
+        fetch('http://localhost:' + port + '/index3?date=' + req.query.date)
             .then(res => res.json())
             .then((body) => {
                 res.send(body)
@@ -439,7 +439,7 @@ app.get('/index2', (req, res) => {
     }
 })
 
-app.get('/index2', (req, res) => {
+app.get('/index3', (req, res) => {
     if (!req.query.date) {
         req.query.date = padLeadingZeros(new Date().getDate(), 2) + '' + padLeadingZeros((new Date().getMonth() + 1), 2) + '' + (new Date().getFullYear() + 543)
     }
