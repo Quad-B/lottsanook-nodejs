@@ -28,6 +28,13 @@ app.get('/', (req, res) => {
             year: parseInt(req.query.date.substr(4, 4)) - 543
         });
     }
+    if (req.query.date.substring(4, 8) == new Date().getFullYear() + 543) {
+        fetch('http://localhost:' + port + '/index3?date=' + req.query.date)
+            .then(res => res.json())
+            .then((body) => {
+                res.send(body)
+            })
+    } else {
     var requestOptions = {
         method: 'POST',
         headers: { "Content-Type": "application/json" },
@@ -123,6 +130,7 @@ app.get('/', (req, res) => {
                     })
             }
         });
+        }
 });
 
 app.get('/index2', (req, res) => {
