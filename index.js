@@ -28,92 +28,128 @@ app.get('/', (req, res) => {
             year: parseInt(req.query.date.substr(4, 4)) - 543
         });
     }
-    /*if (req.query.date.substring(4, 8) == new Date().getFullYear() + 543) {
-        fetch('http://localhost:' + port + '/index3?date=' + req.query.date)
-            .then(res => res.json())
-            .then((body) => {
-                res.send(body)
-            })
-    } else {*/
-    var requestOptions = {
-        method: 'POST',
-        headers: { "Content-Type": "application/json" },
-        body: raw,
-        redirect: 'follow'
-    };
+    var date = new Date(parseInt(req.query.date.substr(4, 4)) - 543, parseInt(req.query.date.substr(2, 2)) - 1, parseInt(req.query.date.substr(0, 2)) + 1);
+    var today = new Date();
+    //if (req.query.date.substring(4, 8) == new Date().getFullYear() + 543) {
+    if (date.getTime() === today.getTime() || date > today) {
+        if (req.query.from !== undefined) {
+            fetch('http://localhost:' + port + '/index3?date=' + req.query.date + '&from')
+                .then(res => res.json())
+                .then((body) => {
+                    res.send(body)
+                })
+        } else {
+            fetch('http://localhost:' + port + '/index3?date=' + req.query.date)
+                .then(res => res.json())
+                .then((body) => {
+                    res.send(body)
+                })
+        }
+    } else {
+        var requestOptions = {
+            method: 'POST',
+            headers: { "Content-Type": "application/json" },
+            body: raw,
+            redirect: 'follow'
+        };
 
-    fetch("https://www.glo.or.th/api/lottery/getLotteryAward", requestOptions)
-        .then(response => response.json())
-        .then(result => {
-            if(result["response"] != null) {
-                let data = [["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e481", 0], ["\u0e40\u0e25\u0e02\u0e2b\u0e19\u0e49\u0e323\u0e15\u0e31\u0e27", 0, 0], ["\u0e40\u0e25\u0e02\u0e17\u0e49\u0e32\u0e223\u0e15\u0e31\u0e27", 0, 0], ["\u0e40\u0e25\u0e02\u0e17\u0e49\u0e32\u0e222\u0e15\u0e31\u0e27", 0], ["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e02\u0e49\u0e32\u0e07\u0e40\u0e04\u0e35\u0e22\u0e07\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e481", 0, 0], ["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e482", 0, 0, 0, 0, 0], ["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e483", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], ["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e484", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], ["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e485", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
-                data[0][1] = result["response"]["data"]["first"]["number"][0]["value"]
-                for (let [index, val] of result["response"]["data"]["last3f"]["number"].entries()) {
-                    data[1][index + 1] = val["value"]
-                }
-                for (let [index, val] of result["response"]["data"]["last3b"]["number"].entries()) {
-                    data[2][index + 1] = val["value"]
-                }
-                data[3][1] = result["response"]["data"]["last2"]["number"][0]["value"]
-                for (let [index, val] of result["response"]["data"]["near1"]["number"].entries()) {
-                    data[4][index + 1] = val["value"]
-                }
-                for (let [index, val] of result["response"]["data"]["second"]["number"].entries()) {
-                    data[5][index + 1] = val["value"]
-                }
-                for (let [index, val] of result["response"]["data"]["third"]["number"].entries()) {
-                    data[6][index + 1] = val["value"]
-                }
-                for (let [index, val] of result["response"]["data"]["fourth"]["number"].entries()) {
-                    data[7][index + 1] = val["value"]
-                }
-                for (let [index, val] of result["response"]["data"]["fifth"]["number"].entries()) {
-                    data[8][index + 1] = val["value"]
-                }
-                if (req.query.from !== undefined) {
-                    switch (req.query.date.substr(2, 2)) {
-                        case '01':
-                            monthtext = "มกราคม";
-                            break;
-                        case '02':
-                            monthtext = "กุมภาพันธ์";
-                            break;
-                        case '03':
-                            monthtext = "มีนาคม";
-                            break;
-                        case '04':
-                            monthtext = "เมษายน";
-                            break;
-                        case '05':
-                            monthtext = "พฤษภาคม";
-                            break;
-                        case '06':
-                            monthtext = "มิถุนายน";
-                            break;
-                        case '07':
-                            monthtext = "กรกฎาคม";
-                            break;
-                        case '08':
-                            monthtext = "สิงหาคม";
-                            break;
-                        case '09':
-                            monthtext = "กันยายน";
-                            break;
-                        case '10':
-                            monthtext = "ตุลาคม";
-                            break;
-                        case '11':
-                            monthtext = "พฤศจิกายน";
-                            break;
-                        case '12':
-                            monthtext = "ธันวาคม";
-                            break;
+        fetch("https://www.glo.or.th/api/lottery/getLotteryAward", requestOptions)
+            .then(response => response.json())
+            .then(result => {
+                if (result["response"] != null) {
+                    let data = [["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e481", 0], ["\u0e40\u0e25\u0e02\u0e2b\u0e19\u0e49\u0e323\u0e15\u0e31\u0e27", 0, 0], ["\u0e40\u0e25\u0e02\u0e17\u0e49\u0e32\u0e223\u0e15\u0e31\u0e27", 0, 0], ["\u0e40\u0e25\u0e02\u0e17\u0e49\u0e32\u0e222\u0e15\u0e31\u0e27", 0], ["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e02\u0e49\u0e32\u0e07\u0e40\u0e04\u0e35\u0e22\u0e07\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e481", 0, 0], ["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e482", 0, 0, 0, 0, 0], ["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e483", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], ["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e484", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], ["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e485", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+                    data[0][1] = result["response"]["data"]["first"]["number"][0]["value"]
+                    for (let [index, val] of result["response"]["data"]["last3f"]["number"].entries()) {
+                        data[1][index + 1] = val["value"]
                     }
+                    for (let [index, val] of result["response"]["data"]["last3b"]["number"].entries()) {
+                        data[2][index + 1] = val["value"]
+                    }
+                    data[3][1] = result["response"]["data"]["last2"]["number"][0]["value"]
+                    for (let [index, val] of result["response"]["data"]["near1"]["number"].entries()) {
+                        data[4][index + 1] = val["value"]
+                    }
+                    for (let [index, val] of result["response"]["data"]["second"]["number"].entries()) {
+                        data[5][index + 1] = val["value"]
+                    }
+                    for (let [index, val] of result["response"]["data"]["third"]["number"].entries()) {
+                        data[6][index + 1] = val["value"]
+                    }
+                    for (let [index, val] of result["response"]["data"]["fourth"]["number"].entries()) {
+                        data[7][index + 1] = val["value"]
+                    }
+                    for (let [index, val] of result["response"]["data"]["fifth"]["number"].entries()) {
+                        data[8][index + 1] = val["value"]
+                    }
+                    if (req.query.from !== undefined) {
+                        switch (req.query.date.substr(2, 2)) {
+                            case '01':
+                                monthtext = "มกราคม";
+                                break;
+                            case '02':
+                                monthtext = "กุมภาพันธ์";
+                                break;
+                            case '03':
+                                monthtext = "มีนาคม";
+                                break;
+                            case '04':
+                                monthtext = "เมษายน";
+                                break;
+                            case '05':
+                                monthtext = "พฤษภาคม";
+                                break;
+                            case '06':
+                                monthtext = "มิถุนายน";
+                                break;
+                            case '07':
+                                monthtext = "กรกฎาคม";
+                                break;
+                            case '08':
+                                monthtext = "สิงหาคม";
+                                break;
+                            case '09':
+                                monthtext = "กันยายน";
+                                break;
+                            case '10':
+                                monthtext = "ตุลาคม";
+                                break;
+                            case '11':
+                                monthtext = "พฤศจิกายน";
+                                break;
+                            case '12':
+                                monthtext = "ธันวาคม";
+                                break;
+                        }
 
-                    data[0][0] = req.query.date.substring(0, 2) + monthtext + req.query.date.substring(4, 8)
+                        data[0][0] = req.query.date.substring(0, 2) + monthtext + req.query.date.substring(4, 8)
+                    }
+                    res.send(data)
+                } else {
+                    var date = new Date(parseInt(req.query.date.substr(4, 4)) - 543, parseInt(req.query.date.substr(2, 2)) - 1, parseInt(req.query.date.substr(0, 2)) + 1);
+                    var thatdate = new Date(2010, 02 - 1, 16 + 1);
+                    if (date.getTime() === thatdate.getTime() || date < thatdate) {
+                        if (req.query.from !== undefined) {
+                            fetch('http://localhost:' + port + '/index3?date=' + req.query.date + '&from')
+                                .then(res => res.json())
+                                .then((body) => {
+                                    res.send(body)
+                                })
+                        } else {
+                            fetch('http://localhost:' + port + '/index3?date=' + req.query.date)
+                                .then(res => res.json())
+                                .then((body) => {
+                                    res.send(body)
+                                })
+                        }
+                    } else {
+                        let data = [["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e481", 0], ["\u0e40\u0e25\u0e02\u0e2b\u0e19\u0e49\u0e323\u0e15\u0e31\u0e27", 0, 0], ["\u0e40\u0e25\u0e02\u0e17\u0e49\u0e32\u0e223\u0e15\u0e31\u0e27", 0, 0], ["\u0e40\u0e25\u0e02\u0e17\u0e49\u0e32\u0e222\u0e15\u0e31\u0e27", 0], ["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e02\u0e49\u0e32\u0e07\u0e40\u0e04\u0e35\u0e22\u0e07\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e481", 0, 0], ["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e482", 0, 0, 0, 0, 0], ["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e483", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], ["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e484", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], ["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e485", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+                        res.send(data)
+                    }
                 }
-                res.send(data)
-            }else{
+            })
+            .catch(error => {
+                /*let data = [["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e481", 0], ["\u0e40\u0e25\u0e02\u0e2b\u0e19\u0e49\u0e323\u0e15\u0e31\u0e27", 0, 0], ["\u0e40\u0e25\u0e02\u0e17\u0e49\u0e32\u0e223\u0e15\u0e31\u0e27", 0, 0], ["\u0e40\u0e25\u0e02\u0e17\u0e49\u0e32\u0e222\u0e15\u0e31\u0e27", 0], ["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e02\u0e49\u0e32\u0e07\u0e40\u0e04\u0e35\u0e22\u0e07\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e481", 0, 0], ["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e482", 0, 0, 0, 0, 0], ["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e483", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], ["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e484", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], ["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e485", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+                res.send(data)*/
                 if (req.query.from !== undefined) {
                     fetch('http://localhost:' + port + '/index3?date=' + req.query.date + '&from')
                         .then(res => res.json())
@@ -127,26 +163,8 @@ app.get('/', (req, res) => {
                             res.send(body)
                         })
                 }
-            }
-        })
-        .catch(error => {
-            /*let data = [["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e481", 0], ["\u0e40\u0e25\u0e02\u0e2b\u0e19\u0e49\u0e323\u0e15\u0e31\u0e27", 0, 0], ["\u0e40\u0e25\u0e02\u0e17\u0e49\u0e32\u0e223\u0e15\u0e31\u0e27", 0, 0], ["\u0e40\u0e25\u0e02\u0e17\u0e49\u0e32\u0e222\u0e15\u0e31\u0e27", 0], ["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e02\u0e49\u0e32\u0e07\u0e40\u0e04\u0e35\u0e22\u0e07\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e481", 0, 0], ["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e482", 0, 0, 0, 0, 0], ["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e483", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], ["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e484", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], ["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e485", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
-            res.send(data)*/
-            if (req.query.from !== undefined) {
-                fetch('http://localhost:' + port + '/index3?date=' + req.query.date + '&from')
-                    .then(res => res.json())
-                    .then((body) => {
-                        res.send(body)
-                    })
-            } else {
-                fetch('http://localhost:' + port + '/index3?date=' + req.query.date)
-                    .then(res => res.json())
-                    .then((body) => {
-                        res.send(body)
-                    })
-            }
-        });
-        //}
+            });
+    }
 });
 
 app.get('/index2', (req, res) => {
@@ -193,7 +211,7 @@ app.get('/index2', (req, res) => {
         if (fileContents) {
             res.send(JSON.parse(fileContents));
         } else {
-            fetch('https://www.myhora.com/%E0%B8%AB%E0%B8%A7%E0%B8%A2/%E0%B8%87%E0%B8%A7%E0%B8%94-' + req.query.date.substring(0, 2) + '-' + encodeURI(monthtext) + '-' + req.query.date.substring(4, 8) + '.aspx',{redirect: 'error'})
+            fetch('https://www.myhora.com/%E0%B8%AB%E0%B8%A7%E0%B8%A2/%E0%B8%87%E0%B8%A7%E0%B8%94-' + req.query.date.substring(0, 2) + '-' + encodeURI(monthtext) + '-' + req.query.date.substring(4, 8) + '.aspx', { redirect: 'error' })
                 .then(res => res.text())
                 .then((body) => {
                     data = [["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e481", 0], ["\u0e40\u0e25\u0e02\u0e2b\u0e19\u0e49\u0e323\u0e15\u0e31\u0e27", 0, 0], ["\u0e40\u0e25\u0e02\u0e17\u0e49\u0e32\u0e223\u0e15\u0e31\u0e27", 0, 0], ["\u0e40\u0e25\u0e02\u0e17\u0e49\u0e32\u0e222\u0e15\u0e31\u0e27", 0], ["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e02\u0e49\u0e32\u0e07\u0e40\u0e04\u0e35\u0e22\u0e07\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e481", 0, 0], ["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e482", 0, 0, 0, 0, 0], ["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e483", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], ["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e484", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], ["\u0e23\u0e32\u0e07\u0e27\u0e31\u0e25\u0e17\u0e35\u0e485", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
@@ -757,7 +775,7 @@ app.get('/god', async (req, res) => {
         if (err) throw err;
         //console.log('Saved!');
         //res.send(yearlist)
-        if(req.query.format == "thtext"){
+        if (req.query.format == "thtext") {
             yearlist.forEach(element => {
                 let monthtext
                 switch (element.slice(2, 4)) {
@@ -779,7 +797,7 @@ app.get('/god', async (req, res) => {
                 yearlist[yearlist.indexOf(element)] = element.slice(0, 2) + " " + monthtext + " " + element.slice(4, 8)
             });
             res.send(yearlist)
-        }else if(req.query.format == "combothtext"){
+        } else if (req.query.format == "combothtext") {
             yearlist.forEach(element => {
                 let monthtext
                 let array
@@ -799,10 +817,10 @@ app.get('/god', async (req, res) => {
                 }
                 //element = element.slice(0, 2) + " " + monthtext + " " + element.slice(4, 8)
                 //yearlist.indexOf(element)
-                yearlist[yearlist.indexOf(element)] = [element,element.slice(0, 2) + " " + monthtext + " " + element.slice(4, 8)]
+                yearlist[yearlist.indexOf(element)] = [element, element.slice(0, 2) + " " + monthtext + " " + element.slice(4, 8)]
             });
             res.send(yearlist)
-        }else{
+        } else {
             res.send(yearlist)
         }
     });
@@ -1010,10 +1028,10 @@ app.get('/finddol', async (req, res) => {
                 let $ = cheerio.load(body)
                 $('td').toArray().forEach(element => {
                     let sl = element.firstChild.data
-                    if(sl != null && sl.split(" ").length == 3 && sl.split(" ")[2] >= 2550){
+                    if (sl != null && sl.split(" ").length == 3 && sl.split(" ")[2] >= 2550) {
                         allwin.unshift(sl)
                     }
-                    
+
                 });
                 res.send(allwin)
             });
@@ -1021,25 +1039,25 @@ app.get('/finddol', async (req, res) => {
 })
 
 app.get('/lotnews', async (req, res) => {
-    let arrayofnews = [0,0,0]
+    let arrayofnews = [0, 0, 0]
     let check = req.query.count % 3
     if (check != 0) {
-        if(check == 1){
+        if (check == 1) {
             //ceil number
             arrayofnews[0] = Math.floor(req.query.count / 3)
             arrayofnews[1] = Math.ceil(req.query.count / 3)
             //floor number
             arrayofnews[2] = Math.floor(req.query.count / 3)
-        }else{
+        } else {
             //ceil number
             arrayofnews[0] = Math.floor(req.query.count / 3)
             arrayofnews[1] = Math.ceil(req.query.count / 3)
             //floor number
-            arrayofnews[2] = Math.floor(req.query.count / 3)+1
+            arrayofnews[2] = Math.floor(req.query.count / 3) + 1
         }
-    }else{
-        arrayofnews[0] = req.query.count/ 3
-        arrayofnews[1] = req.query.count/ 3
+    } else {
+        arrayofnews[0] = req.query.count / 3
+        arrayofnews[1] = req.query.count / 3
         arrayofnews[2] = req.query.count / 3
     }
     let array = [];
