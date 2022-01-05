@@ -677,7 +677,8 @@ app.get('/god', async (req, res) => {
             //console.log("yes this year");
             //console.log(year)
         } else {
-            year = yearlist[yearlist.length - 1].substring(4, 8);
+            //year = yearlist[yearlist.length - 1].substring(4, 8);
+            year = new Date().getFullYear() + 543 - 1;
         }
         yearlist.forEach(function (value, i) {
             if (
