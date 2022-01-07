@@ -1021,6 +1021,48 @@ app.get('/finddol', async (req, res) => {
             res.send(body)
         })
         .catch(async (error) => {
+            var https = require('follow-redirects').https;
+
+            var options = {
+                'method': 'POST',
+                'hostname': 'api.github.com',
+                'path': '/repos/boyphongsakorn/testrepo/actions/workflows/blank.yml/dispatches',
+                'headers': {
+                    'Accept': 'application/vnd.github.v3+json',
+                    'Authorization': 'token ' + process.env.gtoken,
+                    'Content-Type': 'application/json',
+                    'User-Agent': 'PostmanRuntime/7.28.4'
+                },
+                'maxRedirects': 20
+            };
+
+            var reqtwo = https.request(options, function (res) {
+                var chunks = [];
+
+                res.on("data", function (chunk) {
+                    chunks.push(chunk);
+                });
+
+                res.on("end", function (chunk) {
+                    var body = Buffer.concat(chunks);
+                    console.log(body.toString());
+                });
+
+                res.on("error", function (error) {
+                    console.error(error);
+                });
+            });
+
+            var postData = JSON.stringify({
+                "inputs": {
+                    "number": req.query.search.toString()
+                },
+                "ref": "refs/heads/main"
+            });
+
+            reqtwo.write(postData);
+
+            reqtwo.end();
             if (req.query.search.length > 3) {
                 await fetch('http://localhost:' + port + '/god')
                     .then(res => res.json())
