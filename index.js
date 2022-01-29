@@ -197,6 +197,7 @@ app.get('/index2', (req, res) => {
             case '11': monthtext = "พฤศจิกายน"; break;
             case '12': monthtext = "ธันวาคม"; break;
         }
+        //start weird
         var fileDelete = null;
         try {
             if (req.query.fresh !== undefined) {
@@ -205,6 +206,7 @@ app.get('/index2', (req, res) => {
         } catch (err) {
 
         }
+        //end weird
         var fileContents = null;
         try {
             fileContents = fs.readFileSync('tmp/' + req.query.date + '.txt');
@@ -488,6 +490,7 @@ app.get('/index3', (req, res) => {
     if (!req.query.date) {
         req.query.date = padLeadingZeros(new Date().getDate(), 2) + '' + padLeadingZeros((new Date().getMonth() + 1), 2) + '' + (new Date().getFullYear() + 543)
     }
+    //start weird
     var fileDelete = null;
     try {
         if (req.query.fresh !== undefined) {
@@ -496,6 +499,7 @@ app.get('/index3', (req, res) => {
     } catch (err) {
 
     }
+    //end weird
     let monthtext
     var fileContents = null;
     try {
@@ -663,11 +667,7 @@ app.get('/god', async (req, res) => {
     var fileContents = null;
     try {
         fileContents = fs.readFileSync('tmp/cache.txt');
-    } catch (err) {
-        // Here you get the error when the file was not found,
-        // but you also get any other error
-    }
-    //console.log(fileContents)
+    } catch (err) {}
     if (fileContents) {
         yearlist = JSON.parse(fileContents);
         if (
@@ -804,7 +804,7 @@ app.get('/god', async (req, res) => {
         } else if (req.query.format == "combothtext") {
             yearlist.forEach(element => {
                 let monthtext
-                let array
+                //let array
                 switch (element.slice(2, 4)) {
                     case '01': monthtext = "มกราคม"; break;
                     case '02': monthtext = "กุมภาพันธ์"; break;
@@ -959,11 +959,6 @@ app.get('/lastlot', async (req, res) => {
                 lastdate = body[body.length - 1]
             })
     }
-    /*await fetch('http://localhost:' + port + '/gdpy?year=' + (new Date().getFullYear() + 543))
-        .then(res => res.json())
-        .then((body) => {
-            lastdate = body[body.length - 1]
-        })*/
     await fetch('http://localhost:' + port + '/?date=' + lastdate)
         .then(res => res.json())
         .then((body) => {
