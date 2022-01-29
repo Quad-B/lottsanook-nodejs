@@ -2,6 +2,6 @@
 
 # Warning
 
-ถ้าคุณต้องการช่วยเราในการแก้ไขบัค หรือ เพิ่มฟังก์ชั่น ได้โปรดส่งคำขอไปยังที่ [lottsanook-nodejs](../../../../quad-b/lottsanook-nodejs) สำหรับ NodeJS หรือ [lottsanook](../../../../quad-b/lottsanook) สำหรับ PHP
+nodejs only is discontinued move to [lottsanook-docker](../../../../quad-b/lottsanook-docker) For NodeJS/Docker
 
 [![GitHub pull requests](https://img.shields.io/github/issues-pr-raw/Quad-B/lottsanook-nodejs?label=Pull%20request%20for%20helped&logo=github)](../../../../quad-b/lottsanook-nodejs) [![GitHub pull requests](https://img.shields.io/github/issues-pr-raw/Quad-B/lottsanook?label=Pull%20request%20for%20helped&logo=github)](../../../../quad-b/lottsanook)
